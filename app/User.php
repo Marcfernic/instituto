@@ -151,7 +151,7 @@ class User extends Authenticatable
         $booleano = true;
         $idUser = $this->id;
         if ($grupo == null) {
-            $booleano = Grupo::where('tutor', $idUser)->get() ? true : false;
+            $booleano = Grupo::where('creador', $idUser)->get() ? true : false;
         } else {
             $booleano = ($idUser == $grupo->creador);
         }
@@ -165,7 +165,7 @@ class User extends Authenticatable
 
         if($grupo == null){
             //hay que ver todos los grupos existentes y comprobar si algun tutor coincide
-            $encontrado = Tutorizado::where('tutor' , $idUser)->get();
+            $encontrado = Grupo::where('tutor' , $idUser)->get();
             if($encontrado == null) $booleano = false; //no es tutor de ningun grupo
         } else {
             //hay que comprobar si es del grupo pasado como valor
