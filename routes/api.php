@@ -60,6 +60,10 @@ Route::middleware('auth:api')->group(function() {
     Route::apiResource('faltasProfesores', 'API\FaltaProfesorController')->parameters([
         'faltasProfesores' => 'faltaProfesor'
     ]);
+
+    Route::put('api/faltasprofesores/meHagoCargo/{faltasprofesores_id}', 'API\FaltaProfesorController@meHagoCargo');
+
+
 });
 
 Route::any('/{any}', function (ServerRequestInterface $request) {
