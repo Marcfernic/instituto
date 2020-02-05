@@ -19,7 +19,7 @@ class GrupoPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -34,7 +34,6 @@ class GrupoPolicy
         return $user->id === $grupo->creador
             ? Response::allow()
             : Response::deny('No eres el creador de este grupo.');
-
     }
 
     /**
@@ -44,16 +43,10 @@ class GrupoPolicy
      * @return mixed
      */
     public function create(User $user)
-    {   
-        if($user->isSuperAdmin() || $user->isTutorGrupo()){
-            return Response::allow();
-        }else{
-            return Response::deny('No está autorizado para realizar esta acción');
-        }
-        
-        return $user->isProfesorCentro()
+    {
+        return $user->isProfesorCentro() || $user->isTutorGrupo()
             ? Response::allow()
-            : Response::deny('No tienes permiso para crear un nuevo Año Escolar');
+            : Response::deny('No está autorizado para realizar esta acción');
     }
 
     /**
@@ -102,5 +95,18 @@ class GrupoPolicy
     public function forceDelete(User $user, Grupo $grupo)
     {
         //
+    }
+
+    public function asignaTutor(User $user, Grupo $grupo){
+        return ($user->isCreadorGrupo($grupo) || $user->isCoordinadorCentro($grupo->anyoescolarObject->centroObject))
+            ? Response::allow()
+            : Response::deny('No tienes permisos para modificar éste grupo.');
+    }
+
+    public function before($user, $ability)
+    {
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
     }
 }
